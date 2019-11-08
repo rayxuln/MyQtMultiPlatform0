@@ -1,4 +1,4 @@
-#             跨平台项目
+#               MultiPlatform Qt5 | CMake Project
 #            Platform: Windows/MacOS
 #            Author:   Raiix
 #            Date:     2019.11.8
@@ -11,10 +11,12 @@ message(STATUS "Current Operation System is ${CMAKE_SYSTEM}")
 if(WIN32)
     message(STATUS "Configuring for Windows.")
     set(CMAKE_PREFIX_PATH "C:\\pf\\Qt\\5.13.2\\mingw73_32")
-elseif(APPLE)
-    message(STATUS "Configuring for MacOS.")
-    set(QT_APP_DIR "~/Applications/Qt/5.13.2/clang")
 endif(WIN32)
+if(APPLE)
+    message(STATUS "Configuring for MacOS.")
+    set(CMAKE_PREFIX_PATH "~/Applications/Qt/5.13.2/clang_64")
+    get_filename_component(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ABSOLUTE)
+endif(APPLE)
 
 # Detect build type
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE} ")
@@ -45,24 +47,27 @@ add_executable(MyQtAoo
   MainWindow.ui
 )
 
+if(APPLE)
+    set_target_properties(MyQtAoo PROPERTIES MACOSX_BUNDLE TRUE)
+endif(APPLE)
+
 target_link_libraries(MyQtAoo PRIVATE Qt5::Widgets)
 
 # DLL Deployment.
 set(DEPLOY_DIR ${EXECUTABLE_OUTPUT_PATH})
-set(DEPLOY_FUNC ${PROJECT_BINARY_DIR}/dlls_deployment.bat)
 
-if(DEBUG)
-    set(DEPLOY_CONFIGURE debug)
-elseif(RELEASE)
-    set(DEPLOY_CONFIGURE release)
-endif(DEBUG)
-
-# Geenerated .bat to deploy dlls automatically for Windows
+# Generated .bat to deploy dlls automatically for Windows
 if(WIN32)
-file(GENERATE
-        OUTPUT ${DEPLOY_FUNC}
-        CONTENT
-"
+    if(DEBUG)
+        set(DEPLOY_CONFIGURE debug)
+    elseif(RELEASE)
+        set(DEPLOY_CONFIGURE release)
+    endif(DEBUG)
+    set(DEPLOY_FUNC ${PROJECT_BINARY_DIR}/dlls_deployment.bat)
+    file(GENERATE
+            OUTPUT ${DEPLOY_FUNC}
+            CONTENT
+            "
 echo off
 
 :: Translate unix path to windows path
@@ -70,8 +75,8 @@ set \"WIN_DEPLOY_DIR=${DEPLOY_DIR}\"
 set \"WIN_DEPLOY_DIR=%WIN_DEPLOY_DIR:/=\\%\"
 
 :: Translate unix path to windows path
-set \"WIN_PROJECT_BINARY_DIR=${PROJECT_BINARY_DIR}\"
-set \"WIN_PROJECT_BINARY_DIR=%WIN_PROJECT_BINARY_DIR:/=\\%\"
+:: set \"WIN_PROJECT_BINARY_DIR=${PROJECT_BINARY_DIR}\"
+:: set \"WIN_PROJECT_BINARY_DIR=%WIN_PROJECT_BINARY_DIR:/=\\%\"
 
 :: Translate unix path to windows path
 set \"WIN_QT_PATH=${CMAKE_PREFIX_PATH}\"
@@ -85,15 +90,43 @@ if not exist %WIN_DEPLOY_DIR% (md  %WIN_DEPLOY_DIR%)
 
 :: Use windeployqt.exe to copy the dependencies
 windeployqt.exe %WIN_DEPLOY_DIR%\\MyQtAoo.exe -force -${DEPLOY_CONFIGURE}
-"
-)
+            "
+            )
+
+    # By adding a target indicating deploy dir and func to be cleaned
+    add_custom_target(
+            DeployDLLs ALL
+            DEPENDS MyQtAoo
+            COMMAND ${DEPLOY_FUNC}
+            BYPRODUCTS ${DEPLOY_DIR} ${DEPLOY_FUNC}
+            COMMENT "[${CMAKE_SYSTEM_PROCESSOR}] Deploying dlls for ${CMAKE_SYSTEM_NAME} platform."
+    )
 endif(WIN32)
 
-# By adding a target indicating deploy dir and func to be cleaned
-add_custom_target(
-        DeployDLLs ALL
-        DEPENDS MyQtAoo
-        COMMAND ${DEPLOY_FUNC}
-        BYPRODUCTS ${DEPLOY_DIR} ${DEPLOY_FUNC}
-        COMMENT "[${CMAKE_SYSTEM_PROCESSOR}] Deploying dlls for ${CMAKE_SYSTEM_NAME} platform."
-)
+# Directly execute command to deploy shared libs automatically for MacOS
+if(APPLE)
+    if(DEBUG)
+        set(DEPLOY_CONFIGURE -use-debug-libs)
+    elseif(RELEASE)
+        set(DEPLOY_CONFIGURE " ")
+    endif(DEBUG)
+
+    # By adding a target indicating deploy dir and func to be cleaned
+    add_custom_target(
+            DeployDLLs ALL
+            DEPENDS MyQtAoo
+            COMMAND echo
+            BYPRODUCTS ${DEPLOY_DIR}
+            COMMENT "[${CMAKE_SYSTEM_PROCESSOR}] Deploying dlls for ${CMAKE_SYSTEM_NAME} platform."
+    )
+
+    if(RELEASE)
+        add_custom_command(
+                TARGET DeployDLLs
+                POST_BUILD
+                COMMAND ${CMAKE_PREFIX_PATH}/bin/macdeployqt ${DEPLOY_DIR}/MyQtAoo.app -always-overwrite
+        )
+    endif(RELEASE)
+endif(APPLE)
+
+
