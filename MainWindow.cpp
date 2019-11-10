@@ -8,6 +8,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     theModel(new QStandardItemModel()),
+    theDelegate(nullptr),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -15,9 +16,10 @@ MainWindow::MainWindow(QWidget *parent)
     theModel->setHorizontalHeaderItem(0, new QStandardItem(QObject::tr("Key")));
     theModel->setHorizontalHeaderItem(1, new QStandardItem(QObject::tr("Value")));
 
-
-
     ui->treeView->setModel(theModel);
+    theDelegate = ui->treeView->itemDelegate();
+
+
 
     connect(theModel, &QStandardItemModel::itemChanged, this, &MainWindow::treeDataChanged);
 
@@ -33,31 +35,9 @@ void MainWindow::treeDataChanged(QStandardItem * item)
     if(item->column() == 0)
     {
         i = theModel->indexFromItem(item);
-
-        auto t = item->text();
-        bool dirty = false;
-        if(t.at(0) != '\"' || t.at(0) != '\'')
-        {
-            t.push_front('\"');
-            dirty = true;
-        }
-        if(t.at(0) != t.at(t.size()-1))
-        {
-            t.push_back(t.at(0));
-            dirty = true;
-        }
-        if(dirty) item->setText(t);
     }
     else{
         i = theModel->indexFromItem(item).siblingAtColumn(0);
-
-        auto t = item->text();
-        if(t.at(0) != t.at(t.size()-1) || (t.at(0) != '\"' || t.at(0) != '\'' || t.size() < 2))
-        {
-            t = tr("%1").arg(t.toDouble());
-            item->setText(t);
-        }
-
     }
     do
     {
@@ -101,7 +81,8 @@ void MainWindow::openFile() {
     auto fileName = QFileDialog::getOpenFileName(
             this,
             tr("请选择一个JSON文件"),
-            QString()
+            QString(),
+            tr("JSON File(*.json);;Text File(*.txt);;All File(*.*)")
             );
     DataManager::Instance()->loadFromFile(fileName);
 
@@ -138,7 +119,9 @@ void MainWindow::saveFile() {
 void MainWindow::saveAnotherFile() {
     auto fileName = QFileDialog::getSaveFileName(
             this,
-            tr("请选择需要保存的文件")
+            tr("请选择需要保存的文件"),
+            QString(),
+            tr("JSON File(*.json);;Text File(*.txt);;All File(*.*)")
             );
     DataManager::Instance()->saveToFile(fileName);
 }

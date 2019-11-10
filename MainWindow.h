@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QStandardItemModel>
+#include <QItemDelegate>
 
 #include "DataManager.h"
 
@@ -26,6 +27,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QStandardItemModel *theModel;
+    QAbstractItemDelegate *theDelegate;
 private:
     void updateTreeModel(Rix::Json::Object &o, QStandardItem *i);
 };
