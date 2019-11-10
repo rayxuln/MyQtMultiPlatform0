@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     theModel->setHorizontalHeaderItem(0, new QStandardItem(QObject::tr("Key")));
     theModel->setHorizontalHeaderItem(1, new QStandardItem(QObject::tr("Value")));
+    theModel->setHorizontalHeaderItem(2, new QStandardItem(QObject::tr("Type")));
 
     ui->treeView->setModel(theModel);
     theDelegate = ui->treeView->itemDelegate();
@@ -94,16 +95,61 @@ void MainWindow::openFile() {
         {
             auto i0 = new QStandardItem(o.GetKey().c_str());
             auto i1 = new QStandardItem(o.GetRawValue().c_str());
+            auto i2 = new QStandardItem();
+            switch(o.GetType())
+            {
+                case Rix::Json::ValueType::ARRAY:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::ARRAY));
+                    break;
+                case Rix::Json::ValueType::OBJECT:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::OBJECT));
+                    break;
+                case Rix::Json::ValueType::REAL:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::REAL));
+                    break;
+                case Rix::Json::ValueType::STRING:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::STRING));
+                    break;
+                case Rix::Json::ValueType::BOOLEAN:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::BOOLEAN));
+                    break;
+                default:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::UNKOWNED));
+                    break;
+            }
             QList<QStandardItem*> i;
             i.append(i0);
             i.append(i1);
+            i.append(i2);
             theModel->appendRow(i);
         }else
         {
             auto i = new QStandardItem(o.GetKey().c_str());
             auto ci = new QStandardItem();
             ci->setEditable(false);
-            theModel->appendRow({i, ci});
+            auto i2 = new QStandardItem();
+            switch(o.GetType())
+            {
+                case Rix::Json::ValueType::ARRAY:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::ARRAY));
+                    break;
+                case Rix::Json::ValueType::OBJECT:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::OBJECT));
+                    break;
+                case Rix::Json::ValueType::REAL:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::REAL));
+                    break;
+                case Rix::Json::ValueType::STRING:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::STRING));
+                    break;
+                case Rix::Json::ValueType::BOOLEAN:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::BOOLEAN));
+                    break;
+                default:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::UNKOWNED));
+                    break;
+            }
+            theModel->appendRow({i, ci, i2});
             updateTreeModel(o, i);
         }
     }
@@ -134,16 +180,61 @@ void MainWindow::updateTreeModel(Rix::Json::Object &po, QStandardItem *pi) {
         {
             auto i0 = new QStandardItem(o.GetKey().c_str());
             auto i1 = new QStandardItem(o.GetRawValue().c_str());
+            auto i2 = new QStandardItem();
+            switch(o.GetType())
+            {
+                case Rix::Json::ValueType::ARRAY:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::ARRAY));
+                    break;
+                case Rix::Json::ValueType::OBJECT:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::OBJECT));
+                    break;
+                case Rix::Json::ValueType::REAL:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::REAL));
+                    break;
+                case Rix::Json::ValueType::STRING:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::STRING));
+                    break;
+                case Rix::Json::ValueType::BOOLEAN:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::BOOLEAN));
+                    break;
+                default:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::UNKOWNED));
+                    break;
+            }
             QList<QStandardItem*> i;
             i.append(i0);
             i.append(i1);
+            i.append(i2);
             pi->appendRow(i);
         }else
         {
             auto i = new QStandardItem(o.GetKey().c_str());
             auto ci = new QStandardItem();
             ci->setEditable(false);
-            pi->appendRow({i, ci});
+            auto i2 = new QStandardItem();
+            switch(o.GetType())
+            {
+                case Rix::Json::ValueType::ARRAY:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::ARRAY));
+                    break;
+                case Rix::Json::ValueType::OBJECT:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::OBJECT));
+                    break;
+                case Rix::Json::ValueType::REAL:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::REAL));
+                    break;
+                case Rix::Json::ValueType::STRING:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::STRING));
+                    break;
+                case Rix::Json::ValueType::BOOLEAN:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::BOOLEAN));
+                    break;
+                default:
+                    i2->setText(ENUM_STR(Rix::Json::ValueType::UNKOWNED));
+                    break;
+            }
+            pi->appendRow({i, ci, i2});
             updateTreeModel(o, i);
         }
     }

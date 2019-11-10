@@ -8,6 +8,8 @@
 #include <exception>
 #include <vector>
 
+#define ENUM_STR(x) (#x)
+
 namespace Rix
 {
 
