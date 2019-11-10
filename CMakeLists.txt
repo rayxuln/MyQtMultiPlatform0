@@ -40,18 +40,20 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/output)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
+add_subdirectory(RixJson)
+
 add_executable(MyQtAoo
   main.cpp
   MainWindow.cpp
   MainWindow.h
   MainWindow.ui
-)
+        DataManager.cpp DataManager.h)
 
 if(APPLE)
     set_target_properties(MyQtAoo PROPERTIES MACOSX_BUNDLE TRUE)
 endif(APPLE)
 
-target_link_libraries(MyQtAoo PRIVATE Qt5::Widgets)
+target_link_libraries(MyQtAoo PRIVATE Qt5::Widgets RixJson)
 
 # DLL Deployment.
 set(DEPLOY_DIR ${EXECUTABLE_OUTPUT_PATH})
