@@ -4,6 +4,8 @@ addons:
     packages:
       - qt
       - zip
+    update: true
+
 script:
   - mkdir cbuild
   - cd cbuild
