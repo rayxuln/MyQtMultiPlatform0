@@ -7,6 +7,7 @@ addons:
     update: true
 
 script:
+  - ls /usr/local/Cellar/qt/5.13.2
   - mkdir cbuild
   - cd cbuild
   - cmake .. -DCMAKE_BUILD_TYPE=Release
