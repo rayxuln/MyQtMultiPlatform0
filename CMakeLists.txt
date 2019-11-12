@@ -19,14 +19,15 @@ if(APPLE)
         find_file(QT_PATH qt PATHS ${QT_POSIBLE_PATH})
         if(EXISTS ${QT_PATH})
             message("QT_PATH:${QT_PATH} found!")
-            set(CMAKE_PREFIX_PATH "${QT_PATH}/5.13.2/clang_64")
+            set(CMAKE_PREFIX_PATH "${QT_PATH}/5.13.2")
+            if(NOT EXISTS ${CMAKE_PREFIX_PATH}/bin)
+                set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}/clang_64)
+            endif(NOT EXISTS ${CMAKE_PREFIX_PATH}/bin)
             break()
         else(EXISTS ${QT_PATH})
             message("QT_PATH not found in ${QT_POSIBLE_PATH}")
         endif(EXISTS ${QT_PATH})
     endforeach(QT_POSIBLE_PATH)
-
-#    get_filename_component(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ABSOLUTE)
 endif(APPLE)
 
 # Detect build type
