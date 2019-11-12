@@ -3,7 +3,6 @@ addons:
   homebrew:
     packages:
       - qt
-      - zip
     update: true
 
 script:
@@ -14,12 +13,12 @@ script:
 before_deploy:
 - git config --local user.name "Rayxuln"
 - git config --local user.email "imbosslx@sina.com"
-- zip -r output/MyQtAoo.zip output/MyQtAoo.app
+- mv output/MyQtAoo.dmg output/RixJsonEditor.dmg
 deploy:
   provider: releases
   api_key:
     secure: bEJOLfZcYXUqje3BgEVE+wRtakS1/kx8/ZOcrIOEe9vfuw+LLFYmENDvcDMHe/t4z4S4S/nr/A5O7rYrmSH8TpdqU036vYJkbDhi1aNh5ye3X08AZbHA6LosNfV5SmECZHkTgqCzqL9mZ97FW0cizuTP3/lXePovsh4aHnbvODsco6Q8MuCP0pDxhu4PiOCJmR/slO11d9Wzg9ZHLFhYerg9Q5EEz+wG3ijKj4FVunZi6UarJHH89geIBSwVWKB3X3nQ439rWFJ+MR+n0/FdvLKsOIkUd8364HS7Kf4eNM5Ydrg+MZbrCtEP1tBxE4ODj96QoJLfsvVsJfLhSoldqPyWWjvrPuhtimuwlkj5xhrLSp5Ta1Iwp4uZDQNWBF4Ut20BI3krW8m8ZmKAESafsRORqPLMiEpd6rxYfUgpF7lfiVY0d9r6j9V83A3bJoAyyuSSM66G7YaWZnw34fyC6Y72Nk2G7UG4p+syKvtyLfxT2ZSIWeanaCpZ1cIV4G0JYUoCXj9QEpEIjsaUZNiWOAdYVmbOw/5GUPWHh2zPPsUI2eKJ/5gq3w2pjSvxiK03H39wj/0dH/pc8VE8GaPpEZohujDonvJScnXe4vSXTUWxZ3RT5nYC8iwFOoM+owlo42G4v63exIJ/0s6Lm/vL9PcCB6JANQCAWIAaNB+n+wE=
-  file: output/MyQtAoo.zip
+  file: output/MyQtAoo.dmg
   skip_cleanup: true
   on:
     tags: on

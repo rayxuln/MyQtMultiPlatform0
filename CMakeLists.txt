@@ -138,7 +138,7 @@ if(APPLE)
         add_custom_command(
                 TARGET DeployDLLs
                 POST_BUILD
-                COMMAND ${CMAKE_PREFIX_PATH}/bin/macdeployqt ${DEPLOY_DIR}/MyQtAoo.app -always-overwrite
+                COMMAND ${CMAKE_PREFIX_PATH}/bin/macdeployqt ${DEPLOY_DIR}/MyQtAoo.app -always-overwrite -dmg
         )
     endif(RELEASE)
 endif(APPLE)
