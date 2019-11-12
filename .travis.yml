@@ -7,18 +7,16 @@ addons:
     update: true
 
 script:
-  - ls /usr/local/Cellar/qt/5.13.2
   - mkdir cbuild
   - cd cbuild
   - cmake .. -DCMAKE_BUILD_TYPE=Release
   - make
-after_success:
-  - zip output/MyQtAoo.app
 before_deploy:
 - git config --local user.name "Rayxuln"
 - git config --local user.email "imbosslx@sina.com"
 - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
 - git tag $TRAVIS_TAG
+- zip -r output/MyQtAoo.zip output/MyQtAoo.app
 deploy:
   provider: releases
   api_key:
