@@ -54,15 +54,27 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 add_subdirectory(RixJson)
 
+if(APPLE)
+    set(APPLE_ICNS_FILE ${PROJECT_SOURCE_DIR}/resources/icon.icns)
+    set_source_files_properties(${APPLE_ICNS_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+endif(APPLE)
 add_executable(MyQtAoo
   main.cpp
   MainWindow.cpp
   MainWindow.h
   MainWindow.ui
-        DataManager.cpp DataManager.h)
+        DataManager.cpp
+        DataManager.h
+        RixJsonItemDelegate.cpp
+        RixJsonItemDelegate.h
+        resource.qrc
+        ${APPLE_ICNS_FILE}
+        )
 
 if(APPLE)
     set_target_properties(MyQtAoo PROPERTIES MACOSX_BUNDLE TRUE)
+    set(PROJECT_EXECUTABLE_NAME MyQtAoo)
+    set_target_properties(MyQtAoo PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/Info.plist)
 endif(APPLE)
 
 target_link_libraries(MyQtAoo PRIVATE Qt5::Widgets RixJson)

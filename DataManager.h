@@ -20,9 +20,15 @@ protected:
     QUrl currentJsonFileUrl;
     bool dirty;
 public:
-    void loadFromFile(const QString &path);
-    void saveToFile();
-    void saveToFile(const QString &path);
+    bool loadFromFile(const QString &path);
+    bool saveToFile();
+    bool saveToFile(const QString &path);
+    bool currentFileExists();
+
+    void setDirty(bool _d);
+    bool isDirty();
+
+    QString getFileName();
 
     Rix::Json::Object &getCurrentJsonObject();
 

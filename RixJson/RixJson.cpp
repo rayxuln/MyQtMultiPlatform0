@@ -68,12 +68,18 @@ void Object::AddChild(Object &o)
     children.push_back(o);
 }
 
-void _ObjectToStr(stringstream &ss, Object &o, SizeType d, bool b)
+void _ObjectToStr(stringstream &ss, Object &o, SizeType index, Object *po, SizeType d, bool b)
 {
     for(SizeType i=0;b && i<d;++i)ss<<'\t';
-    if(!o.GetKey().empty())
+    if(!o.GetKey().empty() && (po == nullptr || po->GetType() != ValueType::ARRAY))
     {
         ss<<o.GetKey();
+        if(b) ss<<' ';
+        ss<<":";
+        if(b) ss<<' ';
+    }else if(po && po->GetType() == ValueType::OBJECT)
+    {
+        ss<<'\"'<<index<<'\"';
         if(b) ss<<' ';
         ss<<":";
         if(b) ss<<' ';
@@ -92,7 +98,7 @@ void _ObjectToStr(stringstream &ss, Object &o, SizeType d, bool b)
             auto &cs = o.GetChildren();
             for(SizeType i=0; i < cs.size(); ++i)
             {
-                _ObjectToStr(ss, cs[i], d+1, b);
+                _ObjectToStr(ss, cs[i], i, &o, d+1, b);
                 if(i < cs.size()-1) ss<<',';
                 if(b) ss<<endl;
             }
@@ -107,7 +113,7 @@ void _ObjectToStr(stringstream &ss, Object &o, SizeType d, bool b)
             auto &cs = o.GetChildren();
             for(SizeType i=0; i < cs.size(); ++i)
             {
-                _ObjectToStr(ss, cs[i], d+1, b);
+                _ObjectToStr(ss, cs[i], i, &o, d+1, b);
                 if(i < cs.size()-1) ss<<',';
                 if(b) ss<<endl;
             }
@@ -124,12 +130,12 @@ string Object::ToStr(bool beaty)
 {
     stringstream ss;
 
-    _ObjectToStr(ss, *this, 0, beaty);
+    _ObjectToStr(ss, *this, -1, nullptr, 0, beaty);
 
     return ss.str();
 }
 
-Object &Object::operator=(Object &o)
+Object &Object::operator=(const Object &o)
 {
     key = o.key;
     value = o.value;

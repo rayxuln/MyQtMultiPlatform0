@@ -8,7 +8,7 @@
 #include <QDebug>
 
 DataManager::DataManager():dirty(false){
-
+    currentJsonFileUrl = QUrl::fromLocalFile("Untitled.json");
 }
 
 DataManager *DataManager::Instance() {
@@ -16,13 +16,32 @@ DataManager *DataManager::Instance() {
     return &ins;
 }
 
-void DataManager::loadFromFile(const QString &path) {
+void DataManager::setDirty(bool _d) {
+    dirty = _d;
+}
+bool DataManager::isDirty() {
+    return dirty;
+}
+
+bool DataManager::currentFileExists() {
+    return QFile::exists(currentJsonFileUrl.toLocalFile());
+}
+
+QString DataManager::getFileName() {
+    return currentJsonFileUrl.fileName();
+}
+
+bool DataManager::loadFromFile(const QString &path) {
+    if(!QFile::exists(path)){
+        qDebug()<<"File not found: "<<path<<endl;
+        return false;
+    }
     currentJsonFileUrl = QUrl::fromLocalFile(path);
     QFile theFile(currentJsonFileUrl.toLocalFile());
     if(!theFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         qDebug()<<"Can't open file: "<<path<<endl;
-        return;
+        return false;
     }
     QString jsonText(theFile.readAll());
     theFile.close();
@@ -38,24 +57,27 @@ void DataManager::loadFromFile(const QString &path) {
         currentJsonFileUrl.clear();
         qDebug()<<"Parsing json text fail!"<<endl;
         qDebug()<<e.what()<<endl;
+        throw e;
+        return false;
     }
 
 
 
     dirty = false;
+    return true;
 }
 
-void DataManager::saveToFile(const QString &path) {
+bool DataManager::saveToFile(const QString &path) {
     currentJsonFileUrl = QUrl::fromLocalFile(path);
-    saveToFile();
+    return saveToFile();
 }
-void DataManager::saveToFile() {
+bool DataManager::saveToFile() {
     if(currentJsonFileUrl.isEmpty())
-        return;
+        return false;
     QFile theFile(currentJsonFileUrl.toLocalFile());
     if(!theFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qDebug()<<"Can't open file "<<currentJsonFileUrl.toLocalFile()<<endl;
-        return;
+        return false;
     }
 
     QString jsonText = QString::fromStdString(currentJsonObject.ToStr(true));
@@ -65,6 +87,7 @@ void DataManager::saveToFile() {
     theFile.close();
 
     dirty = false;
+    return true;
 }
 
 Rix::Json::Object &DataManager::getCurrentJsonObject() {

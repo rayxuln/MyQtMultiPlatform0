@@ -50,7 +50,7 @@ namespace Rix
 
             std::string ToStr(bool beaty = true);
 
-            Object &operator= (Object &o);
+            Object &operator= (const Object &o);
             
             Object();
             ~Object();
