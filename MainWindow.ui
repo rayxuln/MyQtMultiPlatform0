@@ -15,7 +15,12 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resource.qrc">
-    <normaloff>:/resources/resources/rixjson_icon.png</normaloff>:/resources/resources/rixjson_icon.png</iconset>
+    <normaloff>:/resources/resources/icon.ico</normaloff>
+    <normalon>:/resources/resources/icon.ico</normalon>
+    <activeoff>:/resources/resources/icon.ico</activeoff>
+    <activeon>:/resources/resources/icon.ico</activeon>
+    <selectedoff>:/resources/resources/icon.ico</selectedoff>
+    <selectedon>:/resources/resources/icon.ico</selectedon>:/resources/resources/icon.ico</iconset>
   </property>
   <property name="dockOptions">
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>

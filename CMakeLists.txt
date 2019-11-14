@@ -48,6 +48,11 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Get rip of cmd window on Windows
+if(WIN32)
+    add_link_options("-mwindows")
+endif()
+
 # Change executable output path to output dir, prepare for target RixJsonEditor
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/output)
 
