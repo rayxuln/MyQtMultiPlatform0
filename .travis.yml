@@ -13,7 +13,6 @@ script:
 before_deploy:
 - git config --local user.name "Rayxuln"
 - git config --local user.email "imbosslx@sina.com"
-- mv output/MyQtAoo.dmg output/RixJsonEditor.dmg
 deploy:
   provider: releases
   api_key:

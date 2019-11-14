@@ -38,6 +38,7 @@ else()
     set(RELEASE 1)
 endif(CMAKE_BUILD_TYPE MATCHES Debug)
 
+# Cmake Configuration for Qt
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -47,7 +48,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Change executable output path to output dir
+# Change executable output path to output dir, prepare for target RixJsonEditor
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/output)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
@@ -58,7 +59,7 @@ if(APPLE)
     set(APPLE_ICNS_FILE ${PROJECT_SOURCE_DIR}/resources/icon.icns)
     set_source_files_properties(${APPLE_ICNS_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif(APPLE)
-add_executable(MyQtAoo
+add_executable(RixJsonEditor
   main.cpp
   MainWindow.cpp
   MainWindow.h
@@ -72,12 +73,12 @@ add_executable(MyQtAoo
         )
 
 if(APPLE)
-    set_target_properties(MyQtAoo PROPERTIES MACOSX_BUNDLE TRUE)
-    set(PROJECT_EXECUTABLE_NAME MyQtAoo)
-    set_target_properties(MyQtAoo PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/Info.plist)
+    set_target_properties(RixJsonEditor PROPERTIES MACOSX_BUNDLE TRUE)
+    set(PROJECT_EXECUTABLE_NAME RixJsonEditor)
+    set_target_properties(RixJsonEditor PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/Info.plist) # Adding icon for mac app
 endif(APPLE)
 
-target_link_libraries(MyQtAoo PRIVATE Qt5::Widgets RixJson)
+target_link_libraries(RixJsonEditor PRIVATE Qt5::Widgets RixJson)
 
 # DLL Deployment.
 set(DEPLOY_DIR ${EXECUTABLE_OUTPUT_PATH})
@@ -115,14 +116,14 @@ set PATH=%PATH%;%WIN_QT_PATH%\\bin
 if not exist %WIN_DEPLOY_DIR% (md  %WIN_DEPLOY_DIR%)
 
 :: Use windeployqt.exe to copy the dependencies
-windeployqt.exe %WIN_DEPLOY_DIR%\\MyQtAoo.exe -force -${DEPLOY_CONFIGURE}
+windeployqt.exe %WIN_DEPLOY_DIR%\\RixJsonEditor.exe -force -${DEPLOY_CONFIGURE}
             "
             )
 
     # By adding a target indicating deploy dir and func to be cleaned
     add_custom_target(
             DeployDLLs ALL
-            DEPENDS MyQtAoo
+            DEPENDS RixJsonEditor
             COMMAND ${DEPLOY_FUNC}
             BYPRODUCTS ${DEPLOY_DIR} ${DEPLOY_FUNC}
             COMMENT "[${CMAKE_SYSTEM_PROCESSOR}] Deploying dlls for ${CMAKE_SYSTEM_NAME} platform."
@@ -140,7 +141,7 @@ if(APPLE)
     # By adding a target indicating deploy dir and func to be cleaned
     add_custom_target(
             DeployDLLs ALL
-            DEPENDS MyQtAoo
+            DEPENDS RixJsonEditor
             COMMAND echo
             BYPRODUCTS ${DEPLOY_DIR}
             COMMENT "[${CMAKE_SYSTEM_PROCESSOR}] Deploying dlls for ${CMAKE_SYSTEM_NAME} platform."
@@ -150,7 +151,7 @@ if(APPLE)
         add_custom_command(
                 TARGET DeployDLLs
                 POST_BUILD
-                COMMAND ${CMAKE_PREFIX_PATH}/bin/macdeployqt ${DEPLOY_DIR}/MyQtAoo.app -always-overwrite -dmg
+                COMMAND ${CMAKE_PREFIX_PATH}/bin/macdeployqt ${DEPLOY_DIR}/RixJsonEditor.app -always-overwrite -dmg
         )
     endif(RELEASE)
 endif(APPLE)
