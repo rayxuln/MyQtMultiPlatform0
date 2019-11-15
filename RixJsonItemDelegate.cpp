@@ -9,6 +9,7 @@
 #include <QDebug>
 
 
+// 根据ITEM的不同类型来返回相应的编辑器
 QWidget *RixJsonItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const {
     QWidget *editor = nullptr;
     auto type = (Rix::Json::DisplayType) index.data(Rix::Json::Role::Type).toInt();
@@ -95,6 +96,7 @@ void RixJsonItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mode
     }
 }
 
+// 更新编辑器的尺寸大小
 void RixJsonItemDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const {
     editor->setGeometry(option.rect);
 }

@@ -8,6 +8,7 @@
 #include <QDebug>
 
 DataManager::DataManager():dirty(false){
+    //默认文件名
     currentJsonFileUrl = QUrl::fromLocalFile("Untitled.json");
 }
 

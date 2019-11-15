@@ -24,11 +24,11 @@ public:
     bool saveToFile();
     bool saveToFile(const QString &path);
     bool currentFileExists();
+    QString getFileName();
 
     void setDirty(bool _d);
     bool isDirty();
 
-    QString getFileName();
 
     Rix::Json::Object &getCurrentJsonObject();
 
