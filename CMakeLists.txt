@@ -11,7 +11,7 @@ message(STATUS "Current Operation System is ${CMAKE_SYSTEM}")
 if(WIN32)
     message(STATUS "Configuring for Windows.")
     set(CMAKE_PREFIX_PATH "C:\\pf\\Qt\\5.13.2\\mingw73_32")
-endif(WIN32)
+endif()
 if(APPLE)
     message(STATUS "Configuring for MacOS.")
     foreach(QT_POSIBLE_PATH "/usr/local/Cellar/" "~/Applications/")
@@ -22,13 +22,13 @@ if(APPLE)
             set(CMAKE_PREFIX_PATH "${QT_PATH}/5.13.2")
             if(NOT EXISTS ${CMAKE_PREFIX_PATH}/bin)
                 set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}/clang_64)
-            endif(NOT EXISTS ${CMAKE_PREFIX_PATH}/bin)
+            endif()
             break()
-        else(EXISTS ${QT_PATH})
+        else()
             message("QT_PATH not found in ${QT_POSIBLE_PATH}")
-        endif(EXISTS ${QT_PATH})
+        endif()
     endforeach(QT_POSIBLE_PATH)
-endif(APPLE)
+endif()
 
 # Detect build type
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE} ")
@@ -36,7 +36,7 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     set(DEBUG 1)
 else()
     set(RELEASE 1)
-endif(CMAKE_BUILD_TYPE MATCHES Debug)
+endif()
 
 # Cmake Configuration for Qt
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -63,7 +63,7 @@ add_subdirectory(RixJson)
 if(APPLE)
     set(APPLE_ICNS_FILE ${PROJECT_SOURCE_DIR}/resources/icon.icns)
     set_source_files_properties(${APPLE_ICNS_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-endif(APPLE)
+endif()
 add_executable(RixJsonEditor
   main.cpp
   MainWindow.cpp
@@ -81,7 +81,7 @@ if(APPLE)
     set_target_properties(RixJsonEditor PROPERTIES MACOSX_BUNDLE TRUE)
     set(PROJECT_EXECUTABLE_NAME RixJsonEditor)
     set_target_properties(RixJsonEditor PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/Info.plist) # Adding icon for mac app
-endif(APPLE)
+endif()
 
 target_link_libraries(RixJsonEditor PRIVATE Qt5::Widgets RixJson)
 
@@ -94,7 +94,7 @@ if(WIN32)
         set(DEPLOY_CONFIGURE debug)
     elseif(RELEASE)
         set(DEPLOY_CONFIGURE release)
-    endif(DEBUG)
+    endif()
     set(DEPLOY_FUNC ${PROJECT_BINARY_DIR}/dlls_deployment.bat)
     file(GENERATE
             OUTPUT ${DEPLOY_FUNC}
@@ -133,7 +133,7 @@ windeployqt.exe %WIN_DEPLOY_DIR%\\RixJsonEditor.exe -force -${DEPLOY_CONFIGURE}
             BYPRODUCTS ${DEPLOY_DIR} ${DEPLOY_FUNC}
             COMMENT "[${CMAKE_SYSTEM_PROCESSOR}] Deploying dlls for ${CMAKE_SYSTEM_NAME} platform."
     )
-endif(WIN32)
+endif()
 
 # Directly execute command to deploy shared libs automatically for MacOS
 if(APPLE)
@@ -141,7 +141,7 @@ if(APPLE)
         set(DEPLOY_CONFIGURE -use-debug-libs)
     elseif(RELEASE)
         set(DEPLOY_CONFIGURE " ")
-    endif(DEBUG)
+    endif()
 
     # By adding a target indicating deploy dir and func to be cleaned
     add_custom_target(
@@ -152,13 +152,15 @@ if(APPLE)
             COMMENT "[${CMAKE_SYSTEM_PROCESSOR}] Deploying dlls for ${CMAKE_SYSTEM_NAME} platform."
     )
 
+
+    # No need to deploy dlls on MacOS in Debug mode
     if(RELEASE)
         add_custom_command(
                 TARGET DeployDLLs
                 POST_BUILD
                 COMMAND ${CMAKE_PREFIX_PATH}/bin/macdeployqt ${DEPLOY_DIR}/RixJsonEditor.app -always-overwrite -dmg
         )
-    endif(RELEASE)
-endif(APPLE)
+    endif()
+endif()
 
 

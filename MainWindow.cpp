@@ -7,6 +7,7 @@
 
 
 
+// 初始化
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     theModel(new QStandardItemModel()),
@@ -14,13 +15,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // 设置TREE VIEW的表头
+    // 一共有三列数据
     theModel->setHorizontalHeaderItem(0, new QStandardItem(QObject::tr("Key")));
     theModel->setHorizontalHeaderItem(1, new QStandardItem(QObject::tr("Value")));
     theModel->setHorizontalHeaderItem(2, new QStandardItem(QObject::tr("Type")));
 
+    // 设置TREE VIEW使用的模型为StandarItemModel
     ui->treeView->setModel(theModel);
+    // 设置Tree View使用的委托为自定义的委托
     ui->treeView->setItemDelegate(&theItemDelegate);
 
+    // 连接信号槽
     connect(theModel, &QStandardItemModel::itemChanged, this, &MainWindow::treeDataChanged);
 
     connect(ui->openButton, &QPushButton::clicked, this, &MainWindow::openFile);
@@ -47,6 +53,7 @@ void MainWindow::showTreeViewMenu(const QPoint &point) {
 
 void MainWindow::treeDataChanged(QStandardItem * item)
 {
+    //寻找item对应的JSON Object
     QStack<QModelIndex> s;
     QModelIndex i;
     if(item->column() == 0)
@@ -69,7 +76,7 @@ void MainWindow::treeDataChanged(QStandardItem * item)
         auto index = s.pop();
         p = o;
         o = &o->GetChild(index.row());
-    }
+    }// 此时o为i对应的JSON Object
 
     if(item->column() == 0)// setting key
     {

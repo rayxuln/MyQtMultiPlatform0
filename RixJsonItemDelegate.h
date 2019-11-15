@@ -9,6 +9,7 @@
 
 namespace Rix{
     namespace Json{
+        // 用来指定MODEL储存的数据类型，这里用来储存显示的类型，以便分配不同的编辑器
         enum Role{
             Type = Qt::UserRole + 1
         };

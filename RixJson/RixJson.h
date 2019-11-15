@@ -2,13 +2,8 @@
 #define _H_LIB_RIXJSON_
 
 #include <string>
-#include <locale>
-#include <utility>
-#include <codecvt>
 #include <exception>
 #include <vector>
-
-#define ENUM_STR(x) (#x)
 
 namespace Rix
 {
