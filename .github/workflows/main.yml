@@ -1,0 +1,19 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install QT
+      run: brew update & brew install qt
+    - name: Start Building
+      run: |
+        mkdir cbuild
+        cd cbuild
+        cmake .. -DCMAKE_BUILD_TYPE=Release
+        make
