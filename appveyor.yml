@@ -1,0 +1,21 @@
+version: 1.0.{build}
+image: Visual Studio 2019
+build_script:
+- sh: >-
+    mkdir cbuild
+
+    cd cbuild
+
+    cmake .. -DCMAKE_BUILD_TYPE=Release
+
+    make
+test: off
+before_deploy:
+- sh: 7z a -tzip RixJsonEditor.zip ./*
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: G2Eu4kBZDifBrXAtNnxFRavZhskcGqITDq/2h5FCp0xXh9fDo7XZLU7rHC7k9SU3
+  artifact: output/RixJsonEditor.zip
+  on:
+    APPVEYOR_REPO_TAG: true
