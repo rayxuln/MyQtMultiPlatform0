@@ -55,6 +55,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(WIN32)
     add_compile_options("-m32")
     add_link_options("-mwindows")
+    add_link_options("-m32")
 endif()
 
 # Change executable output path to output dir, prepare for target RixJsonEditor
