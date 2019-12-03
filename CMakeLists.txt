@@ -53,6 +53,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Get rip of cmd window on Windows
 if(WIN32)
+    add_compile_options("-m32")
     add_link_options("-mwindows")
 endif()
 
