@@ -104,7 +104,7 @@ if(WIN32)
             OUTPUT ${DEPLOY_FUNC}
             CONTENT
             "
-echo off
+echo on
 
 :: Translate unix path to windows path
 set \"WIN_DEPLOY_DIR=${DEPLOY_DIR}\"
@@ -133,7 +133,7 @@ windeployqt.exe %WIN_DEPLOY_DIR%\\RixJsonEditor.exe -force -${DEPLOY_CONFIGURE}
     add_custom_target(
             DeployDLLs ALL
             DEPENDS RixJsonEditor
-            COMMAND ${DEPLOY_FUNC}
+            COMMAND echo ${DEPLOY_FUNC} && ${DEPLOY_FUNC}
             BYPRODUCTS ${DEPLOY_DIR} ${DEPLOY_FUNC}
             COMMENT "[${CMAKE_SYSTEM_PROCESSOR}] Deploying dlls for ${CMAKE_SYSTEM_NAME} platform."
     )
