@@ -12,7 +12,8 @@ if(WIN32)
     message(STATUS "Configuring for Windows.")
     set(CMAKE_PREFIX_PATH "C:\\pf\\Qt\\5.13.2\\mingw73_32")
     if(NOT EXISTS ${CMAKE_PREFIX_PATH})
-        set(CMAKE_PREFIX_PATH  "C:\\Qt\\5.13.2\\mingw73_32")
+        add_compile_options("-m64")
+        set(CMAKE_PREFIX_PATH  "C:\\Qt\\5.13.2\\mingw73_64")
     endif()
 endif()
 if(APPLE)
@@ -53,9 +54,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Get rip of cmd window on Windows
 if(WIN32)
-    add_compile_options("-m32")
     add_link_options("-mwindows")
-    add_link_options("-m32")
 endif()
 
 # Change executable output path to output dir, prepare for target RixJsonEditor
